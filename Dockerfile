@@ -1,6 +1,6 @@
-FROM nvidia/cuda:11.2.0-runtime-ubuntu20.04
+FROM tensorflow/tensorflow:2.9.1-gpu-jupyter
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata build-essential python3 python3-dev python3-pip python-is-python3 libglib2.0-0 wget git git-lfs libnvidia-gl-510 \
+    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata build-essential wget git git-lfs \
     && apt-get clean
 
 RUN mkdir -p /src
@@ -21,8 +21,6 @@ RUN pip install lpips
 RUN pip install basicsr
 RUN pip install facexlib
 RUN pip install realesrgan
-RUN pip install tensorflow
-RUN pip install ipywidgets
 
 RUN git clone https://github.com/apolinario/Multi-Modal-Comparators --branch gradient_checkpointing
 RUN pip install poetry
@@ -37,4 +35,5 @@ VOLUME [ "/root/.cache" ]
 COPY majesty.py .
 COPY latent.py .
 COPY latent_settings_library .
+COPY tpu-entrypoint.sh .
 ENTRYPOINT ["python", "latent.py"]
