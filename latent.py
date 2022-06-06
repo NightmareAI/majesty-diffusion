@@ -178,15 +178,35 @@ def main(argv):
         default=0.6,
         dest="init_noise",
     )
+    parser.add_argument(
+        "-t",
+        "--tpu",
+        type=bool,
+        help="Enable usage of cloud TPU",
+        default=False,
+        dest="use_tpu",
+    )
 
     args = parser.parse_args()
     majesty.use_args(args)
 
     majesty.download_models()
 
-    torch.backends.cudnn.benchmark = True
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    majesty.device = device
+    if majesty.use_tpu:
+        try:
+            import torch_xla
+            import torch_xla.core.xla_model as xm
+
+            device = xm.xla_device()
+            majesty.device = device
+        except Exception as exc:
+            print("Unable to use TPU, falling back on GPU/CPU:", exc)
+    if not majesty.device:
+        torch.backends.cudnn.benchmark = True
+        device = (
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        )
+        majesty.device = device
 
     latent_diffusion_model = "finetuned"
     config = OmegaConf.load(
