@@ -172,7 +172,7 @@ def main(argv):
     )
     parser.add_argument(
         "--aesthetic_embeddings_weight",
-        help="#How much you want experimental aesthetic embeddings to influence your result",
+        help="How much you want experimental aesthetic embeddings to influence your result",
         type=float,
         default=0.5,
         dest="experimental_aesthetic_embeddings_weight",
