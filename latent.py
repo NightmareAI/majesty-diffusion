@@ -179,12 +179,10 @@ def main(argv):
         dest="init_noise",
     )
     parser.add_argument(
-        "-t",
         "--tpu",
-        type=bool,
         help="Enable usage of cloud TPU",
-        default=False,
         dest="use_tpu",
+        action="store_true",
     )
 
     args = parser.parse_args()
