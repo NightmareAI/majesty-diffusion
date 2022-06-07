@@ -37,6 +37,4 @@ VOLUME [ "/root/.cache" ]
 COPY majesty.py .
 COPY latent.py .
 COPY latent_settings_library .
-COPY tpu-entrypoint.sh .
-RUN chmod 755 tpu-entrypoint.sh
 ENTRYPOINT ["python", "latent.py"]
