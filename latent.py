@@ -27,17 +27,13 @@ def main(argv):
         dest="clip_prompts",
     )
     parser.add_argument(
-        "-lp",
         "--latent_prompts",
         type=str,
         help="Latent prompts",
-        default=[
-            "portrait of a princess in sanctuary, hyperrealistic painting trending on artstation"
-        ],
+        default=None,
         dest="latent_prompts",
     )
     parser.add_argument(
-        "-ln",
         "--latent_negatives",
         type=str,
         help="Negative prompts",
@@ -45,7 +41,6 @@ def main(argv):
         dest="latent_negatives",
     )
     parser.add_argument(
-        "-ip",
         "--image_prompts",
         type=str,
         help="Image prompts",
@@ -107,7 +102,6 @@ def main(argv):
         dest="how_many_batches",
     )
     parser.add_argument(
-        "-als",
         "--aesthetic_loss_scale",
         type=int,
         help="Aesthetic loss scale",
@@ -115,12 +109,10 @@ def main(argv):
         dest="aesthetic_loss_scale",
     )
     parser.add_argument(
-        "-ac",
-        "--augment_cuts",
-        type=bool,
-        help="Augment cuts",
-        default=True,
+        "--disable_augment_cuts",
+        help="Disable Augment cuts",
         dest="augment_cuts",
+        action="write_false",
     )
     parser.add_argument(
         "-ns",
@@ -131,7 +123,6 @@ def main(argv):
         dest="n_samples",
     )
     parser.add_argument(
-        "-i",
         "--init_image",
         type=str,
         help="Initial image",
@@ -139,7 +130,6 @@ def main(argv):
         dest="init_image",
     )
     parser.add_argument(
-        "-st",
         "--starting_timestep",
         type=float,
         help="Starting timestep",
@@ -147,7 +137,6 @@ def main(argv):
         dest="starting_timestep",
     )
     parser.add_argument(
-        "-im",
         "--init_mask",
         type=str,
         help="A mask same width and height as the original image with the color black indicating where to inpaint",
@@ -155,7 +144,6 @@ def main(argv):
         dest="init_mask",
     )
     parser.add_argument(
-        "-is",
         "--init_scale",
         type=int,
         help="Controls how much the init image should influence the final result. Experiment with values around 1000",
@@ -163,7 +151,6 @@ def main(argv):
         dest="init_scale",
     )
     parser.add_argument(
-        "-ib",
         "--init_brightness",
         type=float,
         help="Init image brightness",
@@ -171,7 +158,6 @@ def main(argv):
         dest="init_brightness",
     )
     parser.add_argument(
-        "-in",
         "--init_noise",
         type=float,
         help="How much extra noise to add to the init image, independently from skipping timesteps (use it also if you are upscaling)",
@@ -184,6 +170,8 @@ def main(argv):
         dest="use_tpu",
         action="store_true",
     )
+
+    parser.add_argument("--enablee-experimental_aesthetic_embeddings")
 
     args = parser.parse_args()
     majesty.use_args(args)
