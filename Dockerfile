@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.9.1-gpu-jupyter
+FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata build-essential wget git git-lfs \
     && apt-get clean
@@ -21,6 +21,7 @@ RUN pip install lpips
 RUN pip install basicsr
 RUN pip install facexlib
 RUN pip install realesrgan
+RUN pip install ipywidgets
 
 RUN git clone https://github.com/apolinario/Multi-Modal-Comparators --branch gradient_checkpointing
 RUN pip install poetry
@@ -36,5 +37,5 @@ COPY majesty.py .
 COPY latent.py .
 COPY latent_settings_library .
 COPY tpu-entrypoint.sh .
-RUN chmod 755 tpu-entrypoint.sh
+RUN chmod 755
 ENTRYPOINT ["python", "latent.py"]
