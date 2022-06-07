@@ -112,7 +112,7 @@ def main(argv):
         "--disable_augment_cuts",
         help="Disable Augment cuts",
         dest="augment_cuts",
-        action="write_false",
+        action="store_false",
     )
     parser.add_argument(
         "-ns",
@@ -165,13 +165,31 @@ def main(argv):
         dest="init_noise",
     )
     parser.add_argument(
+        "--enable_aesthetic_embeddings",
+        help="Experimental aesthetic embeddings, work only with OpenAI ViT-B/32 and ViT-L/14",
+        dest="experimental_aesthetic_embeddings",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--aesthetic_embeddings_weight",
+        help="#How much you want experimental aesthetic embeddings to influence your result",
+        type=float,
+        default=0.5,
+        dest="experimental_aesthetic_embeddings_weight",
+    )
+    parser.add_argument(
+        "--aesthetic_embeddings_score",
+        help="9 are good aesthetic embeddings, 0 are bad ones",
+        type=int,
+        default=9,
+        dest="experimental_aesthetic_embeddings_score",
+    )
+    parser.add_argument(
         "--enable_tpu",
         help="Enable usage of cloud TPU",
         dest="use_tpu",
         action="store_true",
     )
-
-    parser.add_argument("--enablee-experimental_aesthetic_embeddings")
 
     args = parser.parse_args()
     majesty.use_args(args)
