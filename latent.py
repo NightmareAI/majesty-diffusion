@@ -165,7 +165,7 @@ def main(argv):
         dest="init_noise",
     )
     parser.add_argument(
-        "--tpu",
+        "--enable_tpu",
         help="Enable usage of cloud TPU",
         dest="use_tpu",
         action="store_true",
