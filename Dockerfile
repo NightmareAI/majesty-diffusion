@@ -11,6 +11,7 @@ RUN git clone https://github.com/CompVis/taming-transformers
 RUN git clone https://github.com/TencentARC/GFPGAN
 RUN git lfs clone https://github.com/LAION-AI/aesthetic-predictor
 
+RUN pip install tensorflow==2.9.1
 RUN pip install -e ./taming-transformers
 RUN pip install omegaconf>=2.0.0 pytorch-lightning>=1.0.8 torch-fidelity einops
 RUN pip install transformers
