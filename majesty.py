@@ -684,7 +684,7 @@ def null_fn(x_in):
 
 
 def display_handler(x, i, cadance=5, decode=True):
-    global img_tensor, image_grid, p, progress
+    global progress, image_grid, writer, img_tensor, im, p
     img_tensor = x
     if i % cadance == 0:
         if decode:
