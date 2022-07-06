@@ -20,20 +20,17 @@ build:
     - "opencv-python==4.6.0.66"
     - "piq==0.7.0"
     - "poetry==1.1.13"
-    - "pytorch-lightning==1.6.4"    
-    - "torch==1.11.0"
-    - "torchvision==0.12.0"
-    - "torch-fidelity==0.3.0"
     - "transformers==4.19.4"
     - "resize-right==0.0.2"
     - "jupyterlab==3.3.4"
 
-  run:
-    - pip install tensorflow==2.9.1
+  run:    
     - mkdir -p /src
     - echo "Installing libraries..."
+    - pip install tensorflow==2.9.1
     - git clone https://github.com/CompVis/taming-transformers /tmp/taming-transformers
     - pip install -e /tmp/taming-transformers
+    - pip install torch torchvision torchaudio pytorch-lightning torch-fidelity --extra-index-url https://download.pytorch.org/whl/cu113
     - pip install basicsr
     - pip install realesrgan
     - git clone https://github.com/apolinario/Multi-Modal-Comparators /tmp/Multi-Modal-Comparators --branch gradient_checkpointing && cd /tmp/Multi-Modal-Comparators && poetry build && pip install dist/mmc*.whl
