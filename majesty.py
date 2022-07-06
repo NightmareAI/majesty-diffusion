@@ -1161,7 +1161,9 @@ def do_run():
     scale_factor = 1
     make_cutouts = {}
     for i in clip_list:
-        make_cutouts[i] = MakeCutouts(clip_size[i], Overview=1)
+        make_cutouts[i] = MakeCutouts(
+            clip_size[i][0] if type(clip_size[i]) is tuple else clip_size[i], Overview=1
+        )
     for i in clip_list:
         target_embeds[i] = []
         weights[i] = []
