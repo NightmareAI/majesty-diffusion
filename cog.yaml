@@ -1,5 +1,6 @@
 build:
   gpu: true
+  cuda: "11.3"
   system_packages:
     - "git-lfs"
     - "ffmpeg"
@@ -19,8 +20,7 @@ build:
     - "opencv-python==4.6.0.66"
     - "piq==0.7.0"
     - "poetry==1.1.13"
-    - "pytorch-lightning==1.6.4"
-    - "tensorflow==2.8.0"
+    - "pytorch-lightning==1.6.4"    
     - "torch==1.11.0"
     - "torchvision==0.12.0"
     - "torch-fidelity==0.3.0"
@@ -29,6 +29,7 @@ build:
     - "jupyterlab==3.3.4"
 
   run:
+    - pip install tensorflow==2.9.1
     - mkdir -p /src
     - echo "Installing libraries..."
     - git clone https://github.com/CompVis/taming-transformers /tmp/taming-transformers
