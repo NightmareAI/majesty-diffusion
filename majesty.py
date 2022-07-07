@@ -200,6 +200,7 @@ aesthetic_model_336, aesthetic_model_224, aesthetic_model_16, aesthetic_model_32
 custom_schedules = []
 
 progress = None
+progress_fn = None
 image_grid, writer, img_tensor, im = {}, {}, {}, {}
 target_embeds, weights, zero_embed, init = {}, {}, {}, {}
 make_cutouts = {}
@@ -732,7 +733,7 @@ def null_fn(x_in):
 
 
 def display_handler(x, i, cadance=5, decode=True):
-    global progress, image_grid, writer, img_tensor, im, p
+    global progress, image_grid, writer, img_tensor, im, p, progress_fn  
     img_tensor = x
     if i % cadance == 0:
         if decode:
@@ -750,6 +751,8 @@ def display_handler(x, i, cadance=5, decode=True):
                 progress.value = output.getvalue()
             if generate_video:
                 im.save(p.stdin, "PNG")
+            if progress_fn:
+                progress_fn(output.getvalue())
 
 
 def grad_fn(x, t):

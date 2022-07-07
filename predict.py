@@ -11,6 +11,7 @@ from omegaconf import OmegaConf
 import os, shutil
 import typing
 import gc
+import queue, threading
 from tqdm.auto import tqdm, trange
 
 sizes = [128, 192, 256, 320, 384]
@@ -25,11 +26,12 @@ current_clip_load_list = [
     "[clip - mlfoundations - ViT-B-32--laion2b_e16]",
 ]
 
-
 class Predictor(BasePredictor):
     def load(self):
         config = OmegaConf.load("./latent-diffusion/configs/latent-diffusion/txt2img-1p4B-eval.yaml")
-        majesty.latent_diffusion_model = current_latent_diffusion_model
+        majesty.latent_diffusion_model = current_latent_diffusion_model        
+        models.download_models(ongo=majesty.latent_diffusion_model == "ongo", erlich=majesty.latent_diffusion_model== "erlich")
+
         model = majesty.load_model_from_config(
             config,
             f"{majesty.model_path}/latent_diffusion_txt2img_f8_large.ckpt",
@@ -43,6 +45,7 @@ class Predictor(BasePredictor):
         gc.collect()
         majesty.clip_load_list = current_clip_load_list
         majesty.load_clip_globals(True)
+        
 
     def setup(self):
         print("Ensuring models are loaded..")
@@ -68,9 +71,10 @@ class Predictor(BasePredictor):
             description="Prompt for latent diffusion",
             default="The portrait of a Majestic Princess, trending on artstation",
             max_length=230,
-        ),
+        ),        
+        output_steps: int = Input(description="Steps between outputs, 0 to disable progressive output. Minor speed impact.", default=10, choices=[0, 5, 10, 20]),
         model: str = Input(
-            description="Latent diffusion model",
+            description="Latent diffusion model (ongo and erlich may need to download, taking extra time)",
             default="finetuned",
             choices=["original", "finetuned", "ongo", "erlich"],
         ),
@@ -99,10 +103,9 @@ class Predictor(BasePredictor):
         ),
         clip_scale: int = Input(description="CLIP guidance scale", default=16000),
         aesthetic_loss_scale: int = Input(description="Aesthetic loss scale", default=400),
-        starting_timestep: float = Input(description="Starting timestep", default=0.9),
-        num_batches: int = Input(description="Number of batches", default=1, ge=1, le=10),
-        custom_settings: Path = Input(description="Advanced settings file", default=None),
-    ) -> typing.List[Path]:
+        starting_timestep: float = Input(description="Starting timestep", default=0.9),        
+        custom_settings: Path = Input(description="Advanced settings file (will override any settings from above if present)", default=None),
+    ) -> typing.Iterator[Path]:
         """Run a single prediction on the model"""
 
         if model != current_latent_diffusion_model:  # or clip
@@ -134,20 +137,46 @@ class Predictor(BasePredictor):
         majesty.opt.prompt = majesty.latent_prompts
         majesty.opt.uc = majesty.latent_negatives
         majesty.set_custom_schedules()
+        majesty.config_clip_guidance()                        
 
-        majesty.config_clip_guidance()
+            
+        
+        outdir = tempfile.mkdtemp("majesty")
+        majesty.opt.outdir = outdir
+        majesty.config_output_size()
+        majesty.config_options()
+        torch.cuda.empty_cache()
+        gc.collect()
 
+        num_batches = 1
         for n in trange(num_batches, desc="Sampling"):
             print(f"Sampling images {n+1}/{num_batches}")
-            outdir = tempfile.mkdtemp("majesty")
-            majesty.opt.outdir = outdir
-            majesty.config_output_size()
-            majesty.config_options()
-            torch.cuda.empty_cache()
-            gc.collect()
-            majesty.do_run()
+            if (output_steps):
+                output = queue.SimpleQueue()
+                progress_path = outdir + "/progress"
+                os.makedirs(progress_path, exist_ok=True)            
+                majesty.progress_fn = lambda img: output.put(img)
+                self.running = True
+                t = threading.Thread(target=self.worker, daemon=True)
+                ix = 0                
+                t.start()
+                while t.is_alive():
+                    try:
+                        image = output.get(block=True, timeout=5)
+                        if (ix % output_steps == 0):
+                            filename = f'{progress_path}/{ix}.png'                            
+                            outfile = open(filename, 'wb')
+                            outfile.write(image)
+                            yield Path(filename)                    
+                        ix += 1                
+                    except: {}
+            else:
+                majesty.do_run()
             yield Path(glob.glob(outdir + "/*.png")[0])
 
         # processed_input = preprocess(image)
         # output = self.model(processed_image, scale)
         # return postprocess(output)
+    
+    def worker(self):
+        majesty.do_run()
