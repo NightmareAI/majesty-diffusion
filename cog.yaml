@@ -24,13 +24,13 @@ build:
     - "resize-right==0.0.2"
     - "jupyterlab==3.3.4"
 
-  run:    
+  run:
     - mkdir -p /src
     - echo "Installing libraries..."
     - pip install tensorflow==2.9.1
     - git clone https://github.com/CompVis/taming-transformers /tmp/taming-transformers
     - pip install -e /tmp/taming-transformers
-    - pip install torch torchvision torchaudio pytorch-lightning torch-fidelity --extra-index-url https://download.pytorch.org/whl/cu113
+    - pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 pytorch-lightning torch-fidelity -f https://download.pytorch.org/whl/torch_stable.html
     - pip install basicsr
     - pip install realesrgan
     - git clone https://github.com/apolinario/Multi-Modal-Comparators /tmp/Multi-Modal-Comparators --branch gradient_checkpointing && cd /tmp/Multi-Modal-Comparators && poetry build && pip install dist/mmc*.whl
