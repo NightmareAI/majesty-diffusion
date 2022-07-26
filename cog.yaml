@@ -46,16 +46,18 @@ build:
     - wget --quiet --output-document=/root/.cache/majesty-diffusion/openimages_512x_png_embed224.npz https://models.nmb.ai/majesty/openimages_512x_png_embed224.npz
     - wget --quiet --output-document=/root/.cache/majesty-diffusion/sa_0_4_vit_b_16_linear.pth https://models.nmb.ai/majesty/sa_0_4_vit_b_16_linear.pth
     - wget --quiet --output-document=/root/.cache/majesty-diffusion/sa_0_4_vit_b_32_linear.pth https://models.nmb.ai/majesty/sa_0_4_vit_b_32_linear.pth
+    - wget --quiet --output-document=/root/.cache/majesty-diffusion/sa_0_4_vit_l_14_linear.pth http://models.nmb.ai/majesty/sa_0_4_vit_l_14_linear.pth
     - echo "Downloading CLIP models..."
     - mkdir -p /root/.cache/clip; wget --quiet --output-document=/root/.cache/clip/ViT-B-16.pt https://models.nmb.ai/clip/ViT-B-16.pt
     - wget --quiet --output-document=/root/.cache/clip/ViT-L-14.pt https://models.nmb.ai/clip/ViT-L-14.pt
     - wget --quiet --output-document=/root/.cache/clip/vit_b_32-laion2b_e16-af8dbd0c.pth https://models.nmb.ai/clip/vit_b_32-laion2b_e16-af8dbd0c.pth
+    - wget --quiet --output-document=/root/.cache/clip/ViT-L-14-336px.pt https://models.nmb.ai/clip/ViT-L-14-336px.pt
     - mkdir -p /root/.cache/torch/hub/checkpoints; wget --quiet --output-document=/root/.cache/torch/hub/checkpoints/vgg16-397923af.pth https://download.pytorch.org/models/vgg16-397923af.pth
-    - echo "Downloading optional models..."
+    #- echo "Downloading optional models..."
     #- wget --quiet --output-document=/root/.cache/majesty-diffusion/erlich.pt https://models.nmb.ai/majesty/erlich.pt
     #- wget --quiet --output-document=/root/.cache/majesty-diffusion/ongo.pt https://models.nmb.ai/majesty/ongo.pt
     #- wget --quiet --output-document=/root/.cache/clip/ViT-B-32.pt https://models.nmb.ai/clip/ViT-B-32.pt
-    #- wget --quiet --output-document=/root/.cache/clip/ViT-L-14-336px.pt https://models.nmb.ai/clip/ViT-L-14-336px.pt
+
     #- wget --quiet --output-document=/root/.cache/clip/vit_b_16_plus_240-laion400m_e32-699c4b84.pt https://models.nmb.ai/clip/vit_b_16_plus_240-laion400m_e32-699c4b84.pt
     #- wget --quiet --output-document=/root/.cache/clip/RN50x16.pt https://models.nmb.ai/clip/RN50x16.pt
     #- wget --quiet --output-document=/root/.cache/clip/RN50x4.pt https://models.nmb.ai/clip/RN50x4.pt
